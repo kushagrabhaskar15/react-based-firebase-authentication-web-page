@@ -1,0 +1,11 @@
+.login {
+    position: relative;
+    width:25rem;
+    border:0.5px solid gray;
+    border-radius:20px;
+    box-shadow:4px 4px 7px rgb(201,201,201), -8px -8px 20px rgb(255,255,255,1);
+    padding:20px;
+    margin:auto;
+    top:15rem;
+    background-color:white;
+}
