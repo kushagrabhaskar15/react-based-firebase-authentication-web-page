@@ -1,8 +1,9 @@
-import { React, useState } from "react";
-import "./Login.css";
-import auth from './firebase';
+import React,{ useState } from "react";
+import "./Login_SignUp.css";
+import {auth,db} from './firebase';
 import { Form, FormGroup, Input, Label, Button } from "reactstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -12,12 +13,20 @@ const SignUp = () => {
   const handleRegister= async (e) => {
     e.preventDefault();
     try{
-        createUserWithEmailAndPassword(auth,email,pass);
-        const user = auth.currentUser;
+        const getUserCredential = await createUserWithEmailAndPassword(auth,email,pass);
+        const user = getUserCredential.user;
         console.log(user);
+        if(user){
+          await setDoc(doc(db,"Users",user.uid),{
+            name: name,
+            email: user.email,
+            pass: pass
+          });
+        }
+        window.location.href="/login";
     }
     catch(error){
-        console.log(error.message)
+        console.log(error.message);
     }
   }
 
@@ -25,13 +34,14 @@ const SignUp = () => {
     <div className="login">
       <h4 style={{ textAlign: "center" }}>SignUp</h4>
       
-      <Form>
+      <Form onSubmit={handleRegister}>
       
         <FormGroup>
           <Label for="name">Name</Label>
           <Input
             id="name"
             name="name"
+            value={name}
             placeholder="YOUR NAME"
             type="text"
             onChange = {(e)=>setName(e.target.value)}
@@ -44,6 +54,7 @@ const SignUp = () => {
           <Input
             id="email"
             name="email"
+            value={email}
             placeholder="xyz@domain.com"
             type="email"
             onChange = {(e)=>setEmail(e.target.value)}
@@ -56,6 +67,7 @@ const SignUp = () => {
           <Input
             id="pass"
             name="pass"
+            value={pass}
             placeholder="XXXXXXXX"
             type="password"
             onChange={(e)=>setPass(e.target.value)}
@@ -65,7 +77,7 @@ const SignUp = () => {
       
         <div style={{ display: "flex" }}>
           <Button color="primary" type="submit">
-            Login
+            SignUp
           </Button>
           <Button
             color="link"

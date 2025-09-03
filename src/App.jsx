@@ -1,5 +1,6 @@
-import { React, useState } from 'react'
+import  React, { useState } from 'react'
 import Login from './components/login'
+import SignUp from './components/signup'
 import './App.css'
 import { ToastContainer } from 'react-toastify'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
