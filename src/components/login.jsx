@@ -1,16 +1,35 @@
 import React,{ useState } from "react";
 import "./Login_SignUp.css";
 import { Form, FormGroup, Input, Label, Button } from "reactstrap";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from './firebase';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
+  const navigate = useNavigate();
+
+  const handleSignin = async (e) => {
+    e.preventDefault();
+    try{
+        const userCredentials = await signInWithEmailAndPassword(auth,email,pass);
+        toast.success("User Signed In Successfully");
+        navigate("/profile");
+
+    }
+    catch(error){
+        toast.error(error.message,{position:"bottom-center"});
+    }
+  }
+
   return (
     <div className="login">
       <h4 style={{ textAlign: "center" }}>Login</h4>
       
-      <Form>
+      <Form onSubmit={handleSignin}>
         <FormGroup>
           <Label for="email">Email</Label>
           <Input
